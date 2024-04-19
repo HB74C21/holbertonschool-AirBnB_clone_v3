@@ -46,9 +46,10 @@ def update_state(state_id):
     data = request.get_json()
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:
-            setattr(state, key, value)
+            if hasattr(state, key) and key != 'user_id':
+                setattr(state, key, value)
     state.save()
-    return jsonify(state.to_dict())
+    return jsonify(state.to_dict()), 200
 
 
 @app_views.route('/states/<state_id>', methods=['DELETE'],
